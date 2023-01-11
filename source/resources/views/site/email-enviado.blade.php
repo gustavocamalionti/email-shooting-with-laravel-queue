@@ -16,7 +16,9 @@
         <section class="container">
             <div class="d-flex justify-content-center" style="height:100vh;">
                 <div class="m-auto" style="font-size:32px">
-                    <p>Para enviar um e-mail, <a href="{{ route('send.email') }}" class="btn btn-success" style="font-size:32px">Clique aqui!</a></p>
+                    <p>Email adicionado para a fila com <strong class="text-success">sucesso</strong>.</p>
+                    <a href="{{ route('index') }}" class="btn btn-secondary" style="font-size:16px">Clique aqui para voltar</a>
+                   
                 </div>
             </div>
         </section>
@@ -24,7 +26,7 @@
     </main>
 
     <footer>
-
+       
     </footer>
     
     <script src="{{ asset('js/app.js') }}"></script>

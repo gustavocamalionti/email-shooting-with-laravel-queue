@@ -13,12 +13,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('site.index');
+
+
+Route::namespace('site') -> group(function() {
+
+    Route::get('/', [App\Http\Controllers\Site\SiteController::class, 'index'])->name('index');
+ 
+    Route::get('send-mail', [App\Http\Controllers\Site\SiteController::class, 'sendMail'])->name('send.email');
 });
-
-// Auth::routes();
-
-// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
-// Route::get('/')
