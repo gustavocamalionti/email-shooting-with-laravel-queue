@@ -94,7 +94,8 @@ class SiteController extends Controller
         // foreach ($arrayList as $email) {
         //     SendMail::dispatch($email);
         // };
-        SendMail::dispatch();
+        $email="gustavo.gomes@halipar.com.br";
+        SendMail::dispatch($email);
         return view('site.email-enviado');
         // \App\Jobs\SendMail::dispatch();
         // 

@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\EventsMail;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Queue\Events\JobFailed;
 use Illuminate\Support\ServiceProvider;
@@ -28,38 +29,27 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Queue::before(function (JobProcessing $event) {
-            // $job = $event->job->getJobId();
-            // $obj = unserialize($job['data']['data']);
-            // $logEvent = new EventsMail;
-            // $logEvent->uuid = $event->job->payload()['uuid'];
-            // $logEvent->email = 'qualquer_email@teste.com.br';
-            // $logEvent->status = 'ANTES';
-            // $logEvent->details = 'teste';
-            // $logEvent->save();
-            // dd($event,'antesbefore');
-            // dd($event->job);
-            // $event->connectionName
-            // $event->job
-            // $event->job->payload()
-        });
+        // Queue::before(function (JobProcessing $event) {
+        //     if (!$event->job->hasFailed()) {
+        //         $email_send = EventsMail::where('uuid', $event->job->payload()['uuid'])->get()['email'];
+        //         EventsMail::where('email', $email_send)->update(['status' => 'ENTREGUE', 'details' => 'Email enviado com sucesso.']);
+        //     }
+        // });
         
         Queue::after(function (JobProcessed $event) {
-            // $logEvent = new EventsMail;
-            // $logEvent->uuid = $event->job->payload()['uuid'];
-            // $logEvent->email = 'qualquer_email@teste.com.br';
-            // $logEvent->status = 'DEPOIS';
-            // $logEvent->details = 'teste';
-            // $logEvent->save();
+            
+            // $e = EventsMail::where('uuid', $event->job->payload()['uuid'])->get();
+            // if (!$event->job->hasFailed() and (count($e) > 0)) {
+            //     $email_send = EventsMail::where('uuid', $event->job->payload()['uuid'])->get()->pluck('email')[0];
+            //     EventsMail::where('email', $email_send)->update(['status' => 'ENTREGUE', 'details' => 'Email enviado com sucesso.']); 
+            // };
         });
-
+        
         Queue::failing(function (JobFailed $event) {
-            // $logEvent = new EventsMail;
-            // $logEvent->uuid = $event->job->payload()['uuid'];
-            // $logEvent->email = 'qualquer_email@teste.com.br';
-            // $logEvent->status = 'FALHA';
-            // $logEvent->details = 'teste';
-            // $logEvent->save();
+
+            // Log::info($event->job->getJobId());
+            // $exception = $event->exception->getMessage();
+            // EventsMail::where('uuid', strval($event->job->payload()['uuid']))->update(['status' => 'FALHA AO ENVIAR', 'details' => $exception]);
         });
     }
 }

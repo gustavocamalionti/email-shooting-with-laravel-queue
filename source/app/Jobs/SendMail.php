@@ -6,6 +6,8 @@ use Throwable;
 use App\Models\EventsMail;
 use Illuminate\Bus\Queueable;
 use App\Mail\MensagemTesteMail;
+use PhpParser\Node\Stmt\TryCatch;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Artisan;
@@ -18,15 +20,19 @@ class SendMail implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     public $tries = 3;
+
+    protected $email;
+    // public $maxExceptions = 3;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($email)
     {
-        //
+        $this->email = $email;
     }
+
 
     /**
      * Execute the job.
@@ -34,28 +40,36 @@ class SendMail implements ShouldQueue
      * @return void
      */
     public function handle()
-    {   
-        // throw new \Exception("Error Processing the job", 1);
-        // dd($this->job->getJobId);
+    {
 
-        Mail::to('teste@test.com')->send(new MensagemTesteMail());
+        // $events_selected = EventsMail::where('uuid', strval($this->job->payload()['uuid']));
+        // Log::info($events_selected);
+        // if ($events_selected->get()->count() == 0) {
+        //     $logEvent = new EventsMail;
+        //     $logEvent->uuid = $this->job->payload()['uuid'];
+        //     $logEvent->email = $this->email;
+        //     $logEvent->status = 'PROCESSANDO';
+        //     $logEvent->details = 'Aguarde, o evento ainda está na fila.';
+        //     $logEvent->save();
+        // }
 
-        
-        $logEvent = new EventsMail;
-        $logEvent->uuid = $this->job->payload()['uuid'];
-        $logEvent->email = 'qualquer_email@teste.com.br';
-        $logEvent->status = 'INICIO';
-        $logEvent->details = 'teste';
-        $logEvent->save();
-        
+        // Log::info($this->job->getJobId());
+
+        // Mail::to('teste@test.com')->queue(new MensagemTesteMail($this->email, $this->job->payload()['uuid']));
+        Mail::to('teste@test.com')->queue(new MensagemTesteMail($this->email);
+        // dd('job primeiro', $this->job->hasFailed());
+
+        // if(Mail::failures() == 0){
+        //     throw new \Exception("Erro de conexão com o servidor de disparos de emails.", 1);
+        // }
     }
-
-    public function failed(Throwable $throwable) {
-        $logEvent = new EventsMail;
-        $logEvent->uuid = $this->job->payload()['uuid'];
-        $logEvent->email = 'qualquer_email@teste.com.br';
-        $logEvent->status = 'FALHA';
-        $logEvent->details = 'teste';
-        $logEvent->save();
-    }
+    // /**
+    //      * Handle a job failure.
+    //      *
+    //      * @param  \Throwable  $exception
+    //      * @return void
+    //      */
+    //     public function failed(Throwable $exception)
+    //     {
+    //     }
 }
