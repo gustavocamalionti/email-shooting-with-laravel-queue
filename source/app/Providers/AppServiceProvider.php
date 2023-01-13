@@ -38,18 +38,16 @@ class AppServiceProvider extends ServiceProvider
         
         Queue::after(function (JobProcessed $event) {
             
-            // $e = EventsMail::where('uuid', $event->job->payload()['uuid'])->get();
-            // if (!$event->job->hasFailed() and (count($e) > 0)) {
-            //     $email_send = EventsMail::where('uuid', $event->job->payload()['uuid'])->get()->pluck('email')[0];
-            //     EventsMail::where('email', $email_send)->update(['status' => 'ENTREGUE', 'details' => 'Email enviado com sucesso.']); 
-            // };
+            $getEvent = EventsMail::where('uuid', $event->job->payload()['uuid']);
+            if (!$event->job->hasFailed()) {
+                $getEvent->update(['status' => 'Success', 'details' => 'The email has been sent.']); 
+            }
         });
         
         Queue::failing(function (JobFailed $event) {
-
-            // Log::info($event->job->getJobId());
-            // $exception = $event->exception->getMessage();
-            // EventsMail::where('uuid', strval($event->job->payload()['uuid']))->update(['status' => 'FALHA AO ENVIAR', 'details' => $exception]);
+            $exception = $event->exception->getMessage();
+            $getEvent = EventsMail::where('uuid', $event->job->payload()['uuid']);
+            $getEvent->update(['status' => 'Error', 'details' => $exception]);
         });
     }
 }

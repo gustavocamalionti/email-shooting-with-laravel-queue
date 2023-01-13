@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Site;
 
 use App\Jobs\SendMail;
+use App\Models\EventsMail;
 use Illuminate\Http\Request;
 use App\Mail\MensagemTesteMail;
 use App\Http\Controllers\Controller;
@@ -17,8 +18,9 @@ class SiteController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        return view('site.index');
+    {   
+        $event_list = EventsMail::orderBy('updated_at','desc')->get();
+        return view('site.index', compact('event_list'));
     }
 
     /**
@@ -89,16 +91,8 @@ class SiteController extends Controller
 
     public function sendMail()
     {
-        // $arrayList = array('gustavo.gomes@halipar.com.br', 'teste@teste.com.br');
-
-        // foreach ($arrayList as $email) {
-        //     SendMail::dispatch($email);
-        // };
         $email="gustavo.gomes@halipar.com.br";
         SendMail::dispatch($email);
         return view('site.email-enviado');
-        // \App\Jobs\SendMail::dispatch();
-        // 
-        
     }
 }

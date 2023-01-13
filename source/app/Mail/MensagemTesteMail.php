@@ -3,14 +3,20 @@
 namespace App\Mail;
 
 use App\Models\EventsMail;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
+use Illuminate\Contracts\Queue\ShouldBeUniqueUntilProcessing;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Events\Dispatchable;
 
-class MensagemTesteMail extends Mailable implements ShouldQueue
+
+class MensagemTesteMail extends Mailable
 {
-    use Queueable, SerializesModels;
+    use InteractsWithQueue, Queueable, SerializesModels;
 
     public $email;
     /**
@@ -31,18 +37,6 @@ class MensagemTesteMail extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        // $events_selected = EventsMail::where('uuid', $this->uuid);
-        // if ($events_selected->get()->count() == 0) {
-        //     $logEvent = new EventsMail;
-        //     $logEvent->uuid = $this->uuid;
-        //     $logEvent->email = $this->email;
-        //     $logEvent->status = 'PROCESSANDO';
-        //     $logEvent->details = 'Aguarde, o evento ainda está na fila.';
-        //     $logEvent->save();
-        // } else {
-        //     EventsMail::where('email', $this->email)->update(['status' => "PROCESSANDO", 'details' => 'Aguarde, o evento ainda está na fila.' ]);
-        // }
-
         return $this->subject('gustavocamalionti@gmail.com')
             ->from(env("MAIL_FROM_ADDRESS", null), 'Teste email')
             ->view('emails.cadastro-sucesso');
