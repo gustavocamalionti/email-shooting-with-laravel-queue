@@ -19,7 +19,7 @@ class SiteController extends Controller
      */
     public function index()
     {   
-        $event_list = EventsMail::orderBy('updated_at','desc')->get();
+        $event_list = EventsMail::orderBy('created_at','desc')->get();
         return view('site.index', compact('event_list'));
     }
 
